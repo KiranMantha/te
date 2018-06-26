@@ -1,5 +1,5 @@
 import VDOM from './vdom';
-import { h } from 'virtual-dom';
+//import { h } from 'virtual-dom';
 
 const createVDom = (...args) => {
   let vdom = new VDOM();
@@ -37,7 +37,8 @@ const createVDom = (...args) => {
         if (cnode.nodeValue.trim()) vdom.children.push(cnode.nodeValue);
       } else if (cnode.nodeType === 1) {
         let cnodeVDOM = createVDom(cnode);
-        vdom.children.push(h(cnodeVDOM.type, cnodeVDOM.props, [...cnodeVDOM.children]));
+        //vdom.children.push(h(cnodeVDOM.type, cnodeVDOM.props, [...cnodeVDOM.children]));
+        vdom.children.push(cnodeVDOM);
       }
     }
   };

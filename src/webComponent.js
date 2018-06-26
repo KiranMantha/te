@@ -1,6 +1,5 @@
-var createElement = require('virtual-dom/create-element');
-import { patch, diff, h } from 'virtual-dom';
-import createVDom from './toVdom';
+import createVDom from './vdom/toVdom';
+import { changed, createElement, updateElement } from './vdom/diff';
 
 function getVDom(template) {
   let node = (new DOMParser()).parseFromString(template, 'application/xml').children[0];
@@ -27,8 +26,7 @@ export default class LiteteComponent extends HTMLElement {
 
     _updateListener() {
         this._newTree = this._render();
-        let patches = diff(this._initTree, this._newTree);
-        this._root = patch(this._root, patches);
+        updateElement(this, this._newTree, this._initTree);
         this._initTree = this._newTree;
     }
 
@@ -38,15 +36,14 @@ export default class LiteteComponent extends HTMLElement {
         let vdom = createVDom(node);
         console.log(vdom);
         console.log(this.state);
-        return h(vdom.type, vdom.props, [...vdom.children]);
+        return vdom;
     }
 
     //Fires when custom component loaded in DOM
     connectedCallback() {
         if (this.render) {
             this._initTree = this._render();
-            this._root = createElement(this._initTree);
-            this.appendChild(this._root);
+            updateElement(this, this._initTree);
         }
     }
 
