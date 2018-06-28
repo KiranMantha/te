@@ -32,7 +32,7 @@ class TestElement extends LiteteComponent {
             <div>
             <h1>${this.state.greet}</h1>
             <span class="test" id='spn12' onClick='greeting'>sample h</span>
-            <test-elem greet='state.greet'></test-elem>
+            <test-elem greet='state.greet' greeting='greeting'></test-elem>
             </div>
         `);
     }
@@ -46,7 +46,11 @@ class TestElement1 extends LiteteComponent {
         super();
      }
 
+     greet() {
+         this.props.greeting();
+     }
+
      render() {
-         return(`<div>${this.props.greet}</div>`)
+         return(`<div onClick='greet'>${this.props.greet}</div>`)
      }
 }

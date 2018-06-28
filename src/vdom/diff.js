@@ -1,7 +1,7 @@
 //regex
 let forRegex = /^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/,
     isExpression = /{{(.+?)}}/g,
-    isEvent = /^on(Click|Submit)/,
+    isEvent = /^on(Click|Submit|Input|Change)/,
     isFuncWithArgs = /\(\s*([^)]+?)\s*\)/,
     getFuncName = /^\s*[A-Za-z][A-Za-z0-9_]*([^\(]*)/i;
 
