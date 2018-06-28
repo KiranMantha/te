@@ -51,4 +51,4 @@ const getVDom = (template) => {
   return node;
 }
 
-export default createVDom;
+export { createVDom, getVDom };
