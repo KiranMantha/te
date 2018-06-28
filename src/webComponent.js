@@ -25,6 +25,11 @@ export default class LiteteComponent extends HTMLElement {
         if(cb) cb();
     }
 
+    setProps(o) {
+        this.props = Object.assign({}, this.props, o);
+        this._updateListener();
+    }
+
     _updateListener() {
         this._newTree = this._render();
         updateElement(this, this, this._newTree, this._initTree);
