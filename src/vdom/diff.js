@@ -29,7 +29,9 @@ function get(obj, path, defaultValue) {
 
 //Props
 function setProp(context, $target, name, value) {
-    if (isCustomProp(name)) {
+    if($target.props) {
+        $target.props[name] = value;
+    } else if (isCustomProp(name)) {
         return;
     } else if (typeof value === 'boolean') {
         setBooleanProp($target, name, value);
@@ -63,15 +65,23 @@ function removeProp($target, name, value) {
 }
 
 function setProps(context, $target, props) {
-    if ($target.isLiteComponent) {
-        for (let prop of $target.attributes) {
-            $target.props[prop.name] = get(context, prop.value);
-        }
-    } else {
-        Object.keys(props).forEach(name => {
-            setProp(context, $target, name, props[name]);
-        });
+    let len = $target.localName.split('-').length;
+    if (len > 1) {
+        $target.props = {};
+
+        
     }
+    Object.keys(props).forEach(name => {
+        let value;
+        if ($target.props) {
+            $target.setAttribute(name, props[name]);
+            value = get(context, props[name]);
+        } else {
+            value = props[name];
+        }
+        setProp(context, $target, name, value);
+    });
+
 }
 
 function isCustomProp(name) {
@@ -88,9 +98,12 @@ function updateProp(context, $target, name, newVal, oldVal) {
 
 function updateProps(context, $target, newProps, oldProps = {}) {
     if ($target.isLiteComponent) {
-        for (let prop of $target.attributes) {
-            $target.props[prop.name] = get(context, prop.value);
+        let props = {};
+        let arr = $target.attributes || $target.props;
+        for (let prop of arr) {
+            props[prop.name] = get(context, prop.value);
         }
+        $target.setProps(props);
     } else {
         const props = Object.assign({}, newProps, oldProps);
         Object.keys(props).forEach(name => {

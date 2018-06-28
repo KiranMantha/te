@@ -11,7 +11,6 @@ export default class LiteteComponent extends HTMLElement {
         super();
         this._initTree = this._root = this._newTree = null;
         this.isLiteComponent = true;
-        this.props = {};
     }
 
     setState(o, cb) {
@@ -26,7 +25,7 @@ export default class LiteteComponent extends HTMLElement {
     }
 
     setProps(o) {
-        this.props = Object.assign({}, this.props, o);
+        this.props = o;
         this._updateListener();
     }
 
@@ -51,11 +50,6 @@ export default class LiteteComponent extends HTMLElement {
             this._initTree = this._render();
             updateElement(this, this, this._initTree);
         }
-    }
-
-    //Fires whenever an attribute is added, removed or updated
-    attributeChangedCallback(attrName, oldVal, newVal) {
-        this._updateListener();
     }
 
     //Fires when custom component is unloaded from DOM
