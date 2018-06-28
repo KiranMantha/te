@@ -46,4 +46,9 @@ const createVDom = (...args) => {
   return vdom;
 }
 
+const getVDom = (template) => {
+  let node = (new DOMParser()).parseFromString(template, 'application/xml').children[0];
+  return node;
+}
+
 export default createVDom;

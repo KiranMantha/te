@@ -28,7 +28,7 @@ function get(obj, path, defaultValue) {
 }
 
 //Props
-function setProp(context, $target, name, value) {
+function setProp($target, name, value) {
     if($target.props) {
         $target.props[name] = value;
     } else if (isCustomProp(name)) {
@@ -68,18 +68,16 @@ function setProps(context, $target, props) {
     let len = $target.localName.split('-').length;
     if (len > 1) {
         $target.props = {};
-
-        
+        $target.attrs = props;
     }
     Object.keys(props).forEach(name => {
         let value;
         if ($target.props) {
-            $target.setAttribute(name, props[name]);
             value = get(context, props[name]);
         } else {
             value = props[name];
         }
-        setProp(context, $target, name, value);
+        setProp($target, name, value);
     });
 
 }
@@ -99,9 +97,9 @@ function updateProp(context, $target, name, newVal, oldVal) {
 function updateProps(context, $target, newProps, oldProps = {}) {
     if ($target.isLiteComponent) {
         let props = {};
-        let arr = $target.attributes || $target.props;
-        for (let prop of arr) {
-            props[prop.name] = get(context, prop.value);
+        let arr = $target.attrs;
+        for (let prop in arr) {
+            props[prop] = get(context, arr[prop]);
         }
         $target.setProps(props);
     } else {

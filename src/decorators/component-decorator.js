@@ -4,4 +4,9 @@ const Component = (options) => {
     }
 }
 
-export default Component;
+const readonly = (target, key, descriptor) => {
+    descriptor.writable = false;
+    return descriptor;
+}
+
+export { Component, readonly };

@@ -1,4 +1,4 @@
-import Component from './src/decorators/component-decorator';
+import { Component } from './src/decorators/component-decorator';
 import LiteteComponent from './src/webComponent';
 
 @Component({
@@ -13,10 +13,12 @@ class TestElement extends LiteteComponent {
 
         this.count = 0;
 
-        setTimeout(()=> {
+        setTimeout(() => {
             this.count++;
-            this.setState({
-                greet: 'greet'+ this.count
+            this.setState((prevState) => {
+                return {
+                    greet: prevState.greet + this.count
+                }
             });
         }, 1000);
 
@@ -41,16 +43,21 @@ class TestElement extends LiteteComponent {
 @Component({
     selector: 'test-elem'
 })
-class TestElement1 extends LiteteComponent { 
-     constructor() {
+class TestElement1 extends LiteteComponent {
+    constructor() {
         super();
-     }
+    }
 
-     greet() {
-         this.props.greeting();
-     }
+    greet() {
+        this.props.greeting();
+    }
 
-     render() {
-         return(`<div onClick='greet'>${this.props.greet}</div>`)
-     }
+    render() {
+        return (`
+            <div>
+            <div onClick='greet'>${this.props.greet}</div>
+            <div>static</div>
+            </div>
+        `)
+    }
 }

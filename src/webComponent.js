@@ -1,10 +1,5 @@
-import createVDom from './vdom/toVdom';
+import { createVDom, getVDom } from './vdom/toVdom';
 import { changed, createElement, updateElement } from './vdom/diff';
-
-function getVDom(template) {
-  let node = (new DOMParser()).parseFromString(template, 'application/xml').children[0];
-  return node;
-}
 
 export default class LiteteComponent extends HTMLElement {
     constructor() {
