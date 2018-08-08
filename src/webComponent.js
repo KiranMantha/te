@@ -2,8 +2,9 @@ import { createVDom, getVDom } from './vdom/toVdom';
 import { changed, createElement, updateElement } from './vdom/diff';
 
 export default class LiteteComponent extends HTMLElement {
-    constructor() {
+    constructor(props) {
         super();
+        this.props = props;
         this._initTree = this._root = this._newTree = null;
         this.isLiteComponent = true;
     }

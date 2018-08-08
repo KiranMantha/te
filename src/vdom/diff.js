@@ -1,3 +1,6 @@
+import get from '../get';
+import registry from '../registry';
+
 //regex
 let forRegex = /^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/,
     isExpression = /{{(.+?)}}/g,
@@ -5,27 +8,6 @@ let forRegex = /^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+tra
     isFuncWithArgs = /\(\s*([^)]+?)\s*\)/,
     getFuncName = /^\s*[A-Za-z][A-Za-z0-9_]*([^\(]*)/i;
 
-
-//get
-function get(obj, path, defaultValue) {
-    let patharr = path.trim().split('.');
-    let value;
-    let k;
-    for (let i of patharr) {
-        k = k ? k[i] : obj[i];
-        if (k && typeof k !== 'object') {
-            value = k;
-            return value;
-        }
-    }
-    if (typeof value === 'undefined') {
-        if (typeof defaultValue !== 'undefined')
-            value = defaultValue
-        else
-            value = '';
-    }
-    return value;
-}
 
 //Props
 function setProp($target, name, value) {
@@ -84,6 +66,14 @@ function setProps(context, $target, props) {
 
 function isCustomProp(name) {
     return isEventProp(name) || name === 'forceUpdate';
+}
+
+function getContextProps(context, props) {
+    let $props = {};
+    for (let prop in props) {
+        $props[prop] = get(context, arr[prop]);
+    }
+    return $props;
 }
 
 function updateProp(context, $target, name, newVal, oldVal) {
@@ -147,12 +137,20 @@ function addEventListeners(context, $target, props) {
 
 //DOM check
 function createElement(context, node) {
+    let $el;
+    let $comp = registry.getComponent(node.type);
     if (typeof node === 'string') {
         return document.createTextNode(node);
     }
-    const $el = document.createElement(node.type);
-    setProps(context, $el, node.props);
-    addEventListeners(context, $el, node.props);
+    if(!$comp) {
+        $el = document.createElement(node.type);
+        setProps(context, $el, node.props);
+        addEventListeners(context, $el, node.props);
+    } else {
+        let $props = getContextProps(context, node.props);
+        $el = new $comp($props);
+    }
+    
     node.children
         .map(x => createElement(context, x))
         .forEach($el.appendChild.bind($el));
